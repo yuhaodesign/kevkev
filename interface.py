@@ -2,12 +2,6 @@
 import json
 from main import *
 
-dummyData = {
-    'car1' :{
-            1: '12'
-    }
-}
-
 def main():
     pHus = PHus()
     
@@ -22,31 +16,22 @@ def main():
               'S  Avsluta\n'
               )
 
-        choice = raw_input('Val: ').lower()
+        choice = input('Val: ').lower()
 
         if choice == 'i':
             print('Inpassage/Utpassage!')
-            reg = raw_input('Ange regsitreringsnummer: ')
-            start = raw_input('Ange starttid: ')
-            end = raw_input('Ange sluttid: ')
-
-            parkering = {
-                "reg" : reg,
-                "start" : start,
-                "end" : end
-                }
+            reg = input('Ange regsitreringsnummer: ').upper()
+            start = input('Ange starttid: ')
+            end = input('Ange sluttid: ')
 
             for bil in pHus.bilar:
                 if reg == bil.reg:
                     bil.addParkering((start,end))
-
-            for bil in pHus.bilar:
-                print(bil.parkeringar)
             
             
         elif choice == 'f':
             print('Hämta data från fil!')
-            fil = 'data.txt' #raw_input('Ange filnamn: ')
+            fil = 'data.txt' #input('Ange filnamn: ')
 
             with open(fil, 'r') as _file:  
                 parkeringar = json.load(_file)
@@ -54,13 +39,11 @@ def main():
                 for key, value in parkeringar.items():
                     bil = Bil(key, value["typ"], value["parkeringar"])
                     pHus.addBil(bil)
-
-            print(pHus.bilar)
             
         elif choice == 'n':
             print('Lägg till ny bil!')
-            reg = raw_input('Ange registreringsnummer: ')
-            typ = raw_input('Ange biltyp (liten, mellan, stor): ')
+            reg = input('Ange registreringsnummer: ')
+            typ = input('Ange biltyp (liten, mellan, stor): ')
 
             newBil = Bil(reg, typ)
 
@@ -68,23 +51,52 @@ def main():
             
         elif choice == 'p':
             print('Räkna Kostnad')
+            reg = input('Ange registreringsnummer: ').upper()
+
+            index = 0
+            for bil in pHus.bilar:
+                i = 0
+                if bil.reg == reg:
+                    index = i
+
+            bil = pHus.bilar[index]
+
+            tot = 0
+
+            for park in bil.parkeringar:
+                tot += pHus.calculate(park[0],park[1],bil.typ)    
+            
+            print(tot)
+
             
         elif choice == 'v':
             print('Historik')
+            reg = input('Ange registreringsnummer: ').upper()
+            
+            index = 0
+            for bil in pHus.bilar:
+                i = 0
+                if bil.reg == reg:
+                    index = i
+
+            bil = pHus.bilar[index]
+
+            for park in bil.parkeringar:
+                print('start: ' + park[0] + ', end: ' + park[1])
             
         elif choice == 's':
-            data = []
+            data = {}
             for bil in pHus.bilar:
-                for park in bil.parkeringar:
-                    toAdd = {
-                        "reg" : bil.reg,
-                        "park" : park
-                        }
-                    data.append(toAdd)
+                data[bil.reg] = {'parkeringar': bil.parkeringar, 'typ': bil.typ}
             
-            with open('parking_data.txt', 'w') as outfile:
+            with open('data.txt', 'w') as outfile:
                 json.dump(data, outfile)
             break
+
+        elif choice == 't':
+            for bil in pHus.bilar:
+                print(bil.reg)
+
         
         else:
             print('Inte ett giltigt val!\n \n')

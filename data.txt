@@ -1,1 +1,1 @@
-{"TAR123": {"parkeringar": [["11:30", "15:30"]], "typ": "stor"},"ABC123": {"parkeringar": [["11:30", "15:30"]], "typ": "liten"}}
+{"KJL123": {"parkeringar": [["15:20", "16:30"], ["14:30", "18:30"]], "typ": "liten"}, "TAR123": {"parkeringar": [["11:30", "15:30"]], "typ": "stor"}, "ABC123": {"parkeringar": [["11:30", "15:30"]], "typ": "liten"}}
